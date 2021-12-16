@@ -1,27 +1,47 @@
 import fs from "fs";
 import path from "path";
-import { degrees, PDFDocument } from "pdf-lib";
+import { PDFDocument } from "pdf-lib";
+import { fromPath } from "pdf2pic";
+import { pxToPoint } from "./helper/calc";
 
-const pdfPath = path.join(__dirname, "assets", "teste2.pdf");
+const pdfPath = path.join(__dirname, "assets", "teste.pdf");
 const signaturePath = path.join(__dirname, "assets", "assinatura.png");
 
 const run = async (pathToPDF: string, pathToImage: string) => {
     const pdfDoc = await PDFDocument.load(fs.readFileSync(pathToPDF));
     const img = await pdfDoc.embedPng(fs.readFileSync(pathToImage));
-    const imagePage = pdfDoc.getPage(0);
+    const imagePage = await pdfDoc.getPage(0);
     console.log(imagePage.getRotation());
 
+    const x = 72.01754252115886;
+    const y = 471.50583902994794;
+
     imagePage.drawImage(img, {
-        x: 100,
-        y: imagePage.getHeight() - 735,
+        x: pxToPoint(x), //288.66541181291853,
+        y: Math.abs(pxToPoint(y) - imagePage.getHeight()),
         width: 100,
         height: 30,
         rotate: imagePage.getRotation(),
     });
 
-    console.log(imagePage.getWidth());
-    console.log(imagePage.getHeight());
+    const options = {
+        density: 100,
+        saveFilename: "untitled",
+        savePath: path.join(__dirname, "assets"),
+        format: "png",
+        width: imagePage.getWidth() * 1.3333333333333333,
+        height: imagePage.getHeight() * 1.3333333333333333,
+    };
+    const storeAsImage = fromPath(pdfPath, options);
+    const pageToConvertAsImage = 1;
+
+    storeAsImage(pageToConvertAsImage).then((resolve) => {
+        return resolve;
+    });
+
     console.log(imagePage.getSize());
+    console.log(pxToPoint(x));
+    console.log(Math.abs(pxToPoint(y) - imagePage.getHeight()));
 
     const pdfBytes = await pdfDoc.save();
     fs.writeFileSync(path.join(__dirname, "assets", "result.pdf"), pdfBytes);
