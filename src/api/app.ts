@@ -3,6 +3,7 @@ import helmet from "helmet";
 import cors from "cors";
 import appRoutes from "./routes/app.routes";
 import dayjs from "dayjs";
+import multer from "multer";
 
 export async function startApi() {
     const api = express();
@@ -22,6 +23,10 @@ export async function startApi() {
     //PARSER x-www-form-urlencoded
     api.use(express.urlencoded({ extended: true }));
     api.use(express.json({ limit: 2e6 }));
+
+    // PARSER multipart/form-data
+    api.use(multer().single("file"));
+    api.use(express.static("public"));
 
     //LOAD ROUTES
     api.use(appRoutes);
