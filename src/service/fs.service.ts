@@ -28,5 +28,9 @@ export function clearPathTemp() {
     console.log(`(${dayjs().format("DD/MM/YYYY HH:mm:ss")}) - Diretório temporário limpo`);
 }
 
+export function bufferToBase64(buffer: Buffer) {
+    return buffer.toString("base64");
+}
+
 createFsTree();
 clearPathTemp();

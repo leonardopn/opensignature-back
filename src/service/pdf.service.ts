@@ -2,7 +2,9 @@ import fs from "fs";
 import path from "path";
 import { PDFDocument } from "pdf-lib";
 import { fromPath } from "pdf2pic";
+import { Options } from "pdf2pic/dist/types/options";
 import { pxToPoint } from "../helper/calc";
+import { getPathTemp } from './fs.service';
 
 const pdfPath = path.join(__dirname, "assets", "teste.pdf");
 const signaturePath = path.join(__dirname, "assets", "assinatura.png");
@@ -46,3 +48,20 @@ const run = async (pathToPDF: string, pathToImage: string) => {
     const pdfBytes = await pdfDoc.save();
     fs.writeFileSync(path.join(__dirname, "assets", "result.pdf"), pdfBytes);
 };
+
+export async function pdfToPng(pdfPath: string, name: string) {
+    const pdfDoc = await PDFDocument.load(fs.readFileSync(pdfPath));
+    const imagePage = await pdfDoc.getPage(0);
+
+    const options: Options = {
+        density: 100,
+        saveFilename: name,
+        savePath: getPathTemp(),
+        format: "png",
+        width: imagePage.getWidth() * 1.3333333333333333,
+        height: imagePage.getHeight() * 1.3333333333333333,
+    };
+
+    const convertedPdf = await fromPath(pdfPath, options);
+    await convertedPdf(1);
+}
