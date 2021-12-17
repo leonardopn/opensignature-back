@@ -12,6 +12,21 @@ export function createFsTree() {
     console.log(`(${dayjs().format("DD/MM/YYYY HH:mm:ss")}) - Carregando diretório temporário`);
 }
 
+export async function saveFile(buffer: Buffer, fileName: string) {
+    fs.writeFileSync(path.join(pathTemp, fileName), buffer);
+    console.log(`(${dayjs().format("DD/MM/YYYY HH:mm:ss")}) - Arquivo salvo: ${fileName}`);
+}
+
 export function getPathTemp() {
     return pathTemp;
 }
+
+export function clearPathTemp() {
+    fs.readdirSync(pathTemp).forEach((file) => {
+        fs.unlinkSync(path.join(pathTemp, file));
+    });
+    console.log(`(${dayjs().format("DD/MM/YYYY HH:mm:ss")}) - Diretório temporário limpo`);
+}
+
+createFsTree();
+clearPathTemp();
