@@ -1,4 +1,5 @@
 assets
+temp
 node_modules
 
 .env
