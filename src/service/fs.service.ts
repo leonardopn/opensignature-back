@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const pathTemp = path.join(__dirname, "..", "temp");
+const pathAssets = path.join(__dirname, "..", "assets");
 
 export function createFsTree() {
     if (!fs.existsSync(pathTemp)) {
@@ -19,6 +20,9 @@ export async function saveFile(buffer: Buffer, fileName: string) {
 
 export function getPathTemp() {
     return pathTemp;
+}
+export function getPathAssets() {
+    return pathAssets;
 }
 
 export function clearPathTemp() {

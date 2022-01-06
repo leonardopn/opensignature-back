@@ -15,7 +15,7 @@ route.post("/upload", async (req, res, next) => {
         res.status(400).send({ error: "Nenhum arquivo foi enviado!" });
     } else {
         const id = uuidv4();
-        const fileName = id + path.extname(file.originalname);
+        const fileName = "teste.pdf"//id + path.extname(file.originalname);
 
         await saveFile(file.buffer, fileName);
         await pdfToPng(path.join(getPathTemp(), fileName), id);

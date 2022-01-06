@@ -3,6 +3,7 @@ import helmet from "helmet";
 import cors from "cors";
 import appRoutes from "./routes/app.routes";
 import fileRoutes from "./routes/file.routes";
+import signRoutes from "./routes/sign.routes";
 import dayjs from "dayjs";
 import multer from "multer";
 
@@ -32,6 +33,7 @@ export async function startApi() {
     //LOAD ROUTES
     api.use(appRoutes);
     api.use(fileRoutes);
+    api.use(signRoutes);
 
     api.listen(process.env.PORT, () => {
         console.log(`(${dayjs().format("DD/MM/YYYY HH:mm:ss")}) - Servidor escutando na porta: ${process.env.PORT}`);
